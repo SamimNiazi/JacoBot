@@ -4,10 +4,14 @@ from dotenv import load_dotenv
 from discord import Intents, Client, Message
 from Functionnalities import miscellaneous as misc
 from Functionnalities import apiCalls
+from pymongo import MongoClient
 
 #LOAD MY TOKEN FROM MY ENV FILE
 load_dotenv()
 TOKEN: Final[str] = os.getenv("DISCORD_TOKEN")
+#LOAD MONGODBURI FROM MY ENV FILE
+URI: Final[str] = os.getenv("MONGO_DB")
+mongoClient = MongoClient(URI)
 
 #BOT SETUP
 intents: Intents = Intents.default()
