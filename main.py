@@ -2,9 +2,10 @@ from typing import Final
 import os
 from dotenv import load_dotenv
 from discord import Intents, Client, Message
-from Functionnalities import miscellaneous as misc
-from Functionnalities import apiCalls
 from pymongo import MongoClient
+
+from Functionnalities import miscellaneous, apiCalls
+from Functionnalities.Profiles import profileCreation
 
 #LOAD MY TOKEN FROM MY ENV FILE
 load_dotenv()
@@ -22,14 +23,20 @@ client: Client = Client(intents=intents)
 async def directCommands(action: str, message: Message) -> None:
     commandWords: list = action.split(' ')
     command_after_prefix: str = commandWords[0]
+
     match command_after_prefix:
         case "dice":
-            await message.channel.send(misc.dice())
+            await message.channel.send(miscellaneous.dice())
         case "8ball":
-            await message.channel.send(misc.eightball())
+            await message.channel.send(miscellaneous.eightball())
         case "dog":
             embed = await apiCalls.dog()
             await message.channel.send(embed = embed)
+        case "createprofile":
+            await profileCreation.create(message)
+
+
+
 
 
 
