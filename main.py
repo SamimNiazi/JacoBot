@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 from discord import Intents, Client, Message
 from Functionnalities import miscellaneous as misc
+from Functionnalities import apiCalls
 
 #LOAD MY TOKEN FROM MY ENV FILE
 load_dotenv()
@@ -13,19 +14,6 @@ intents: Intents = Intents.default()
 intents.message_content = True
 client: Client = Client(intents=intents)
 
-#MESSAGE FUNCTIONALITY
-# async def send_message(message: Message, user_message: str) -> None:
-#     if not user_message:
-#         print('Message was empty because intents were not enabled')
-#         return
-#
-#     try:
-#         response: str = get_response(user_message)
-#         await message.channel.send(response)
-#     except Exception as e:
-#         print(e)
-
-
 #DIRECTING COMMANDS
 async def directCommands(action: str, message: Message) -> None:
     commandWords: list = action.split(' ')
@@ -33,8 +21,11 @@ async def directCommands(action: str, message: Message) -> None:
     match command_after_prefix:
         case "dice":
             await message.channel.send(misc.dice())
-        case"8ball":
+        case "8ball":
             await message.channel.send(misc.eightball())
+        case "dog":
+            embed = await apiCalls.dog()
+            await message.channel.send(embed = embed)
 
 
 
