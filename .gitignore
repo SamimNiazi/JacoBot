@@ -1,0 +1,6 @@
+# ignore environnement file
+.env
+
+# personal dev tools-related git exclusions
+.DS_Store
+.idea
