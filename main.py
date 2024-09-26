@@ -5,7 +5,7 @@ from discord import Intents, Client, Message
 from pymongo import MongoClient
 
 from Functionnalities import miscellaneous, apiCalls
-from Functionnalities.Profiles import profileCreation
+from Functionnalities.Profiles import profileCreation, Calendar
 
 #LOAD MY TOKEN FROM MY ENV FILE
 load_dotenv()
@@ -33,9 +33,11 @@ async def directCommands(action: str, message: Message) -> None:
             embed = await apiCalls.dog()
             await message.channel.send(embed = embed)
         case "createprofile":
-            await profileCreation.create(message)
-
-
+            await profileCreation.create(message,mongoClient)
+        case "adddate":
+            await Calendar.addDateToCalendar(message, client, mongoClient)
+        case "calendar":
+            await Calendar.calendar(message, mongoClient)
 
 
 
@@ -50,6 +52,8 @@ async def on_ready() -> None:
 @client.event
 async def on_message(message: Message) -> None:
     if message.author == client.user:
+        return
+    if message.author.id == 1287856434217750590:
         return
     if message.content.startswith(PREFIX):
         action = str(message.content[5:])
