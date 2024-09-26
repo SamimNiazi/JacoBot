@@ -4,36 +4,36 @@ import discord
 from Functionnalities.Profiles.profileCreation import create
 
 
-async def calendar(message, mongoClient):
-    collection = mongoClient.users['UserProfiles']
+async def calendar(message, mongo_client):
+    collection = mongo_client.users['UserProfiles']
     query = {"discord_id":message.author.id }
 
     if not collection.find_one(query):
-        await create(message, mongoClient)
+        await create(message, mongo_client)
 
-    userCalendar = collection.find_one(query, projection={'_id': 0, "calendar": 1})
-    embed = createCalendarEmbed(userCalendar['calendar'], message)
+    user_calendar = collection.find_one(query, projection={'_id': 0, "calendar": 1})
+    embed = create_calendar_embed(user_calendar['calendar'], message)
     await message.channel.send(embed=embed)
 
 
 
-async def addDateToCalendar(message, client, mongoClient):
-    collection = mongoClient.users['UserProfiles']
+async def add_date_to_calendar(message, client, mongo_client):
+    collection = mongo_client.users['UserProfiles']
 
-    await calendar(message, mongoClient)
+    await calendar(message, mongo_client)
 
     await message.channel.send("Please send the date")
-    replyEventDate = await waitForReply(message, client)
-    if not replyEventDate: return
+    reply_event_date = await wait_for_reply(message, client)
+    if not reply_event_date: return
     await message.channel.send("What is this date for?")
-    replyEventName = await waitForReply(message, client)
-    if not replyEventName: return
+    reply_event_name = await wait_for_reply(message, client)
+    if not reply_event_name: return
 
-    collection.update_one({"discord_id":message.author.id }, {"$addToSet": { "calendar": [ replyEventDate.content, replyEventName.content ] } })
+    collection.update_one({"discord_id":message.author.id }, {"$addToSet": { "calendar": [ reply_event_date.content, reply_event_name.content ] } })
     await message.channel.send("Your date has been added to the calendar")
 
 
-async def waitForReply(message, client):
+async def wait_for_reply(message, client):
 
     def check(m):
         return m.author == message.author and m.channel == message.channel
@@ -45,7 +45,7 @@ async def waitForReply(message, client):
         return
     return reply
 
-def createCalendarEmbed(dates, message) :
+def create_calendar_embed(dates, message) :
 
     em = discord.Embed(title = "Here's your upcoming events!" )
     events = ""

@@ -20,9 +20,9 @@ intents.message_content = True
 client: Client = Client(intents=intents)
 
 #DIRECTING COMMANDS
-async def directCommands(action: str, message: Message) -> None:
-    commandWords: list = action.split(' ')
-    command_after_prefix: str = commandWords[0]
+async def direct_commands(action: str, message: Message) -> None:
+    command_words: list = action.split(' ')
+    command_after_prefix: str = command_words[0]
 
     match command_after_prefix:
         case "dice":
@@ -35,7 +35,7 @@ async def directCommands(action: str, message: Message) -> None:
         case "createprofile":
             await profileCreation.create(message,mongoClient)
         case "adddate":
-            await Calendar.addDateToCalendar(message, client, mongoClient)
+            await Calendar.add_date_to_calendar(message, client, mongoClient)
         case "calendar":
             await Calendar.calendar(message, mongoClient)
 
@@ -57,7 +57,7 @@ async def on_message(message: Message) -> None:
         return
     if message.content.startswith(PREFIX):
         action = str(message.content[5:])
-        await directCommands(action.lower(), message)
+        await direct_commands(action.lower(), message)
 
 #MAIN ENTRY POINT
 def main() -> None:

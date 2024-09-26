@@ -1,5 +1,5 @@
-async def create(message, mongoClient):
-    collection = mongoClient.users['UserProfiles']
+async def create(message, mongo_client):
+    collection = mongo_client.users['UserProfiles']
     if collection.find_one({"discord_id":message.author.id }) :
         await message.channel.send("You already have a profile")
         return
