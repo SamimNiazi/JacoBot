@@ -7,9 +7,7 @@ A discord bot created for the sole purpose of creating one.
 ### Main Functionalities
 
 - Profile creation and storage in MongoDB
-
-
-
+- Calendar to store and see upcoming events
 
 ### Misc Functionalities
 
