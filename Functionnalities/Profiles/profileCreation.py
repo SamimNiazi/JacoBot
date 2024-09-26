@@ -1,9 +1,6 @@
-from main import mongoClient
-
-async def create(message):
+async def create(message, mongoClient):
     collection = mongoClient.users['UserProfiles']
-
-    if collection.find({"discord_id":message.author.id }) :
+    if collection.find_one({"discord_id":message.author.id }) :
         await message.channel.send("You already have a profile")
         return
 
@@ -11,6 +8,7 @@ async def create(message):
         {
             "discord_id": message.author.id,
             "discord_name": message.author.name,
+            "calendar": []
         }
     )
     await message.channel.send("You have been added to the database")
