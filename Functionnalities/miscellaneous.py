@@ -1,5 +1,5 @@
 from random import randint, choice
-from Constants import automatedResponses
+from Common import automatedResponses
 
 def dice() -> str:
     return f'You rolled a {randint(1, 6)}'
