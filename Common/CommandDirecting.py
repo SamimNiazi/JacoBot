@@ -16,6 +16,12 @@ async def commands_match_case(command_after_prefix, message, client=None):
         case "createprofile":
             await Profile().create(message)
         case "adddate":
-            await Calendar().add_date_to_calendar(message, client)
+            await Calendar(client).add_date_to_calendar(message)
         case "calendar":
-            await Calendar().calendar(message)
+            await Calendar(client).calendar(message)
+
+async def buttons_match_case(interaction, client=None):
+    match interaction.data.get("custom_id"):
+        case "remove_a_date" | "remove_all_dates":
+            await Calendar(client).remove_dates(interaction)
+

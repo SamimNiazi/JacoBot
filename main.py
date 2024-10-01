@@ -32,7 +32,9 @@ async def on_message(message: Message) -> None:
 
 @client.event
 async def on_interaction(interaction) -> None:
-    await interaction.response.send_message("Not yet implemented", ephemeral=True)
+    await interaction.response.defer()
+    await CommandDirecting.buttons_match_case(interaction, client)
+
 
 #MAIN ENTRY POINT
 def main() -> None:
