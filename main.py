@@ -30,6 +30,10 @@ async def on_message(message: Message) -> None:
         action = str(message.content[5:])
         await direct_commands(action.lower(), message)
 
+@client.event
+async def on_interaction(interaction) -> None:
+    await interaction.response.send_message("Not yet implemented", ephemeral=True)
+
 #MAIN ENTRY POINT
 def main() -> None:
     client.run(token=Constants().TOKEN)

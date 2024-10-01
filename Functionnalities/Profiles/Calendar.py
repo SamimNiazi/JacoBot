@@ -3,6 +3,8 @@ import discord
 from datetime import datetime
 
 from Functionnalities.Profiles.profileCreation import Profile
+from Interfaces import ButtonView
+from discord.ui import Button
 
 
 async def wait_for_reply(message, client):
@@ -18,15 +20,21 @@ async def wait_for_reply(message, client):
 
 
 def create_calendar_embed(dates, message) :
-
     em = discord.Embed(title = "Here's your upcoming events!" )
     events = ""
     for date in dates:
-        events += "- " + "**" + date[0].strftime("%a %b %d %Y") + ":**   " + date[1] + "\n"
+        delta_time_days = (date[0] - datetime.now()).days
+        events += f'-** {date[0].strftime("%a %b %d %Y")} :**  {date[1]} \n => *({abs(delta_time_days)} days {'left' if delta_time_days >= 0 else 'ago'})*\n'
     em.description = events
     em.set_thumbnail(url=message.author.avatar)
     return em
 
+def create_button_view() :
+    buttons = ButtonView.EventButtons()
+    buttons.add_item(Button(label="Remove a Single Date", style=discord.ButtonStyle.primary))
+    buttons.add_item(Button(label="Remove All Dates", style=discord.ButtonStyle.secondary))
+    buttons.add_item(Button(label="Remove Expired Dates", style=discord.ButtonStyle.secondary))
+    return buttons
 
 class Calendar(Profile):
 
@@ -45,7 +53,8 @@ class Calendar(Profile):
             user_calendar = self.order_calendar_dates(message, query)
 
         embed = create_calendar_embed(user_calendar['calendar'], message)
-        await message.channel.send(embed=embed)
+        button_view = create_button_view()
+        await message.channel.send(embed=embed, view=button_view)
 
 
 
