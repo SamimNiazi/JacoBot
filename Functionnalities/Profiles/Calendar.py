@@ -20,17 +20,21 @@ async def wait_for_reply(message, author , client):
 
 
 def create_calendar_embed(dates, message) :
-    em = discord.Embed(title = "Here's your upcoming events!" )
+    em = discord.Embed(title = "Here's your upcoming events!")
     events = ""
+    counter = 1
     for date in dates:
         delta_time_days = (date[0] - datetime.now()).days
-        events += f'-** {date[0].strftime("%a %b %d %Y")} :**  {date[1]} \n => *({abs(delta_time_days)} days {'left' if delta_time_days >= 0 else 'ago'})*\n'
+        events += f'** {counter} -  {date[0].strftime("%a %b %d %Y")} :**  {date[1]} \n => *{abs(delta_time_days)} days {'left' if delta_time_days >= 0 else 'ago'}*\n'
+        counter += 1
+
     em.description = events
     em.set_thumbnail(url=message.author.avatar)
+    em.set_footer(text=message.author.id)
     return em
 
-def create_button_view(author_id) :
-    buttons = ButtonView.EventButtons(author_id)
+def create_button_view() :
+    buttons = ButtonView.EventButtons()
     buttons.add_item(Button(label="Remove a Single Date", style=discord.ButtonStyle.primary,custom_id="remove_a_date"))
     buttons.add_item(Button(label="Remove All Dates", style=discord.ButtonStyle.secondary, custom_id="remove_all_dates"))
     return buttons
@@ -53,7 +57,7 @@ class Calendar(Profile):
             user_calendar = self.order_calendar_dates(message, query)
 
         embed = create_calendar_embed(user_calendar['calendar'], message)
-        button_view = create_button_view(message.author.id)
+        button_view = create_button_view()
         await message.channel.send(embed=embed, view=button_view)
 
 
@@ -90,12 +94,14 @@ class Calendar(Profile):
             await super().create(message)
 
     async def remove_dates(self, interaction):
+        if interaction.message.embeds[0].footer.text != str(interaction.user.id):
+            return
         query = {"discord_id": interaction.user.id}
         match interaction.data.get("custom_id"):
             case "remove_a_date":
 
                 user_profile = self.collection.find_one(query)
-                await interaction.channel.send("Please send the index of the event you want to remove. (1 being the first item in the calendar)")
+                await interaction.channel.send("Please send the index of the event you want to remove.")
                 index = await wait_for_reply(interaction,interaction.user, self.client)
                 try:
                     index_as_int = int(index.content)
