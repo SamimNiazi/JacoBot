@@ -1,3 +1,9 @@
+"""Module used to store the bots automated responses
+
+Stores responses as lists of string
+Example:
+    Responses for 8ball command
+"""
 from typing import Final
 
 EIGHTBALLRESPONSES: Final[list] = [
