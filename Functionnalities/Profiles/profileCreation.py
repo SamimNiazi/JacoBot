@@ -14,7 +14,8 @@ class Profile:
             {
                 "discord_id": message.author.id,
                 "discord_name": message.author.name,
-                "calendar": []
+                "calendar": [],
+                "is_calendar_ordered": False
             }
         )
         await message.channel.send("You have been added to the database")

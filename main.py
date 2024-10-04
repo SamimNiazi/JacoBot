@@ -24,11 +24,17 @@ async def on_ready() -> None:
 async def on_message(message: Message) -> None:
     if message.author == client.user:
         return
-    if message.author.id == 1287856434217750590:
+    if message.author.id == 1287856434217750590:   #can be removed if elperro is not in the same server >:c
         return
     if message.content.startswith(PREFIX):
         action = str(message.content[5:])
         await direct_commands(action.lower(), message)
+
+@client.event
+async def on_interaction(interaction) -> None:
+    await interaction.response.defer()
+    await CommandDirecting.buttons_match_case(interaction, client)
+
 
 #MAIN ENTRY POINT
 def main() -> None:
