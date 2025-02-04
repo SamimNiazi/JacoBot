@@ -5,7 +5,9 @@ Attributes:
     client (Client): Represents a client connection that connects to Discord.
 """
 from typing import Final
+import discord
 from discord import Intents, Client, Message
+
 from Common.constants import Constants
 from Common import command_directing
 
@@ -67,6 +69,30 @@ async def on_interaction(interaction) -> None:
     """
     await interaction.response.defer()
     await command_directing.buttons_match_case(interaction, client)
+
+
+@client.event
+async def on_message_delete(message) -> None:
+    """Function called whenever a message is deleted.
+
+    Logs the deleted message content and the user who sent it.
+
+    Args:
+        message (discord.Message): The deleted message object.
+    """
+    if message.author.bot:
+        return
+
+    embed = discord.Embed(
+        title="🗑 Message Deleted",
+        description=f"**User:** {message.author.mention}\n"
+                    f"**Channel:** {message.channel.mention}\n"
+                    f"**Message:** {message.content}",
+        color=discord.Color.red(),
+        timestamp=message.created_at
+    )
+    embed.set_footer(text=f"Usaer ID: {message.author.id}")
+    await message.channel.send(embed=embed)
 
 
 #MAIN ENTRY POINT
